@@ -1,0 +1,87 @@
+<!-- 👨🏻‍💻 - Coding By Equipe Rewebby -->
+ <!-- 🌐 - https://rewebby.netlify.app/ -->
+  <!-- 📌 - Instagram : Rewebby_dev ; -->
+  <!-- 📧 - Gmail : Jradisstodayman@gmail.com ; -->
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">  
+    <title>Text To Speech in JavaScript | CodingNepal</title>
+    <link rel="stylesheet" href="texttospeech.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>Text To Speech</header>
+      <form action="#">
+        <div class="row">
+          <label>Enter Text</label>
+          <textarea></textarea>
+        </div>
+        <div class="row">
+          <label>Select Voice</label>
+          <div class="outer">
+            <select></select>
+          </div>
+        </div>
+        <button>Convert To Speech</button>
+        <a id="downloadLink" type="audio/mpeg" download="speech.mp3">Download Audio</a>
+      </form>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          const textArea = document.getElementById('textToConvert');
+          const voiceSelect = document.getElementById('voiceSelect');
+          const convertBtn = document.getElementById('convertBtn');
+          const downloadLink = document.getElementById('downloadLink');
+        
+          // Function to convert text to speech
+          function convertToSpeech() {
+            const text = textArea.value.trim();
+            const selectedVoice = voiceSelect.value;
+        
+            // Speech synthesis
+            const synth = window.speechSynthesis;
+            let utterance = new SpeechSynthesisUtterance(text);
+            for (let voice of synth.getVoices()) {
+              if (voice.name === selectedVoice) {
+                utterance.voice = voice;
+                break;
+              }
+            }
+            synth.speak(utterance);
+        
+            // Show download link after speech synthesis
+            utterance.onend = function () {
+              const blob = new Blob([new Uint8Array(utterance.audioContent)]);
+              const url = URL.createObjectURL(blob);
+              downloadLink.href = url;
+              downloadLink.style.display = 'inline'; // Show the download link
+            };
+          }
+        
+          // Event listener for Convert To Speech button
+          convertBtn.addEventListener('click', function() {
+            convertToSpeech();
+          });
+        
+          // Populate voice options
+          window.speechSynthesis.onvoiceschanged = function() {
+            voiceSelect.innerHTML = ''; // Clear existing options
+            const voices = window.speechSynthesis.getVoices();
+            voices.forEach(function(voice) {
+              let option = document.createElement('option');
+              option.textContent = `${voice.name} (${voice.lang})`;
+              option.value = voice.name;
+              voiceSelect.appendChild(option);
+            });
+          };
+        });
+        </script>
+
+    <script src="texttospeech.js"></script>
+    <!-- 👤 - Owner : Aymen El Ouadi ; -->
+  <!-- 📌 - instagram : Shaad___you ; -->
+  </body>
+</html>
